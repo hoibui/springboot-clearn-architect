@@ -1,5 +1,7 @@
 package com.example.demo.athena.application.service;
+import com.example.demo.athena.domain.model.Category;
 import com.example.demo.athena.domain.model.Product;
+import com.example.demo.athena.infrastructure.persistence.CategoryJpaRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -9,13 +11,19 @@ import java.util.Optional;
 public class ProductService {
 
     private final ProductPort productPort;
+    private final CategoryJpaRepository categoryJpaRepository;
 
-    public ProductService(ProductPort productPort) {
+    public ProductService(ProductPort productPort, CategoryJpaRepository categoryJpaRepository) {
         this.productPort = productPort;
+        this.categoryJpaRepository = categoryJpaRepository;
     }
 
 
     public Product createProduct(Product product) {
+        Category category = categoryJpaRepository.findById(product.getCategory().getId())
+                .orElseThrow(() -> new RuntimeException("Category not found"));
+
+        product.setCategory(category);
         return productPort.save(product);
     }
 

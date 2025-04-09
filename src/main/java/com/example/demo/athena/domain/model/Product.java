@@ -1,5 +1,6 @@
 package com.example.demo.athena.domain.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -14,14 +15,11 @@ public class Product {
     private Long id;
     private String name;
     private int quantity;
-    private String category;
+
+    @ManyToOne
+    @JoinColumn(name = "category_id")
+    @JsonBackReference
+    private Category category;
 
     public Product() {}
-
-    public Product(String name, Long id, int quantity, String category) {
-        this.name = name;
-        this.id = id;
-        this.quantity = quantity;
-        this.category = category;
-    }
 }
